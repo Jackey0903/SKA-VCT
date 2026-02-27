@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Virtual Environment
+venv/
+env/
+.env
+.venv
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Project specific
+data/
+datasets/
+output/
+AVS_dataset/
+nohup.out
+*.log
+
+# Large files and models
+*.pth
+*.pt
+*.pkl
+*.h5
+*.onnx
+*.pdf
+
+# Internal Documentation
+docs/internal/
