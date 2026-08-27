@@ -8,7 +8,7 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-1.13-EE4C2C.svg?logo=pytorch&logoColor=white)](#installation)
 [![Detectron2](https://img.shields.io/badge/Detectron2-vendored-4b8bbe.svg)](#installation)
 [![Task](https://img.shields.io/badge/Task-Audio--Visual%20Segmentation-2E8B57.svg)](#overview)
-[![Benchmark](https://img.shields.io/badge/Benchmark-AVSBench-8A2BE2.svg)](#main-results)
+[![Benchmark](https://img.shields.io/badge/Benchmark-AVSBench-8A2BE2.svg)](#results)
 [![Paper](https://img.shields.io/badge/Paper-Under%20Review-f59e0b.svg)](#citation)
 [![License](https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg)](LICENSE)
 
@@ -63,63 +63,9 @@ SKA correlates the pooled audio query with kinematic keys by spatial affinity to
 
 </details>
 
-## Main Results
+## Results
 
-All rows use a Swin-B backbone. KEVA reports the five-seed mean under the matched training protocol.
-
-### AVSBench
-
-*mIoU = mean Jaccard index (M_J); F-score = mean F-measure (M_F). Best in **bold**, second best <ins>underlined</ins> within the listed comparison set.*
-
-| Method | Venue | S4 mIoU | S4 F-score | MS3 mIoU | MS3 F-score | AVSS mIoU | AVSS F-score |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| CPM | ECCV'24 | 81.40 | 90.50 | 59.80 | 71.00 | 34.50 | 39.60 |
-| TeSO | ECCV'24 | 83.30 | 93.30 | 66.00 | 80.10 | 39.00 | 45.10 |
-| AVSBias | MM'24 | 83.30 | 93.00 | 67.20 | 80.80 | 44.40 | 49.90 |
-| ICF | ICCV'25 | <ins>86.63</ins> | <ins>93.51</ins> | 64.38 | 75.39 | 45.03 | 51.28 |
-| SSP | ICCV'25 | 85.40 | 93.30 | <ins>72.30</ins> | <ins>84.60</ins> | 50.10 | 54.50 |
-| VCT | CVPR'25 | 86.20 | 93.40 | 67.60 | 81.40 | <ins>51.20</ins> | <ins>55.50</ins> |
-| **KEVA** | — | **87.42** | **95.10** | **73.50** | **84.88** | **51.98** | **56.33** |
-
-The margin is largest on **MS3** (+5.90 mIoU over VCT), which is exactly the multi-source regime where several visible objects compete to explain one soundtrack — the case audio-conditioned verification is designed for.
-
-### Matched functional attribution
-
-Every row shares the same inputs, priors, decoder, optimization budget, and five paired seeds. Only the named operation changes.
-
-| Configuration | S4 mIoU | MS3 mIoU | AVSS mIoU |
-| --- | --- | --- | --- |
-| VQR (vision-centric reference) | 86.20 | 67.60 | 51.20 |
-| \+ Boundary refinement only | 86.55 | 68.30 | 51.45 |
-| \+ Motion verification (SKA-gated PPQG) | 86.83 | 70.45 | 51.64 |
-| \+ Verified querying (SKA + MPQG, no BRM) | 87.18 | 72.65 | 51.76 |
-| **Full KEVA** | **87.42** | **73.50** | **51.98** |
-
-Of the 5.90-point MS3 gain, **5.05 points come from the verification path** (SKA + MPQG); boundary refinement alone contributes 0.70. Refinement is complementary — it does not explain the localization gain.
-
-### Robustness to deceptive saliency
-
-A 98-video evaluation-only set covering moving silent distractors, camera motion, weak source motion, and correlated motion. *Drop* is measured against each method's own S4 score.
-
-| Method | S4 mIoU | Custom mIoU | Drop ↓ |
-| --- | --- | --- | --- |
-| AVSegFormer | 82.10 | 68.45 | 13.65 |
-| VCT | 86.20 | 75.30 | 10.90 |
-| AVSBias | 83.30 | 75.80 | 7.50 |
-| SSP | 85.40 | 79.10 | 6.30 |
-| **KEVA** | **87.42** | **84.15** | **3.27** |
-
-On AVSBench-Robust, G-mIoU rises from 23.79 → **42.00** (Robust-S4) and 47.91 → **61.00** (Robust-MS3).
-
-## Qualitative Results
-
-<p align="center">
-  <img src="assets/qualitative.jpg" width="97%" alt="Qualitative comparison on AVSBench">
-</p>
-
-<p align="center">
-<em><b>Left:</b> KEVA tracks the active instrument and withholds masks from silent ones. <b>Right:</b> the baseline locks onto a salient silent object while KEVA follows the sounding performer across all frames.</em>
-</p>
+Quantitative results, ablations, and qualitative comparisons are reported in the paper and will be added here once it is public.
 
 ## Installation
 
@@ -224,10 +170,6 @@ python pred.py \
 
 `test_motion_guided.py` runs the motion-verification diagnostics, and `scripts/visualize_query_comparison.sh` reproduces the initial-query activation maps.
 
-## Efficiency
-
-Verification is cheap. Over the vision-centric baseline, KEVA adds **5.8M parameters** and **25.5 GFLOPs**. With flow cached, the core model runs at **18 FPS** (8.5 FPS end-to-end including RAFT extraction).
-
 ## Repository Structure
 
 | Path | Description |
@@ -246,6 +188,7 @@ Verification is cheap. Over the vision-centric baseline, KEVA adds **5.8M parame
 - [x] Core model code and training/evaluation scripts
 - [x] Flow extraction and preprocessing tools
 - [ ] Pretrained checkpoints
+- [ ] Quantitative results and qualitative comparisons
 - [ ] Custom-Distractor evaluation set release
 - [ ] Paper link and final BibTeX
 
